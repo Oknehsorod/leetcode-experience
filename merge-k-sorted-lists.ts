@@ -75,23 +75,55 @@ class MyMinHeap {
     return this.heap.length;
   }
 
+  private bubbleUp(idx: number) {
+    if (idx === 0) return;
+    if (this.heap.length === 1) return;
+    if (idx > this.heap.length) return;
+
+    const parentIdx = this.getParentIdx(idx);
+    const parent = this.heap[parentIdx];
+    const child = this.heap[idx];
+
+    if (parent.val > child.val) {
+      [this.heap[parentIdx], this.heap[idx]] = [
+        this.heap[idx],
+        this.heap[parentIdx],
+      ];
+
+      this.bubbleUp(parentIdx);
+    }
+  }
+
+  private bubbleDown(idx: number) {
+    const left = 2 * idx + 1,
+      right = 2 * idx + 2;
+
+    const leftChild = this.heap[left],
+      rightChild = this.heap[right];
+
+    let smallest = idx;
+
+    if (leftChild && leftChild.val < this.heap[smallest].val) {
+      smallest = left;
+    }
+
+    if (rightChild && rightChild.val < this.heap[smallest].val) {
+      smallest = right;
+    }
+
+    if (idx === smallest) return;
+
+    [this.heap[idx], this.heap[smallest]] = [
+      this.heap[smallest],
+      this.heap[idx],
+    ];
+
+    this.bubbleDown(idx);
+  }
+
   public insert(node: ListNode) {
     this.heap.push(node);
-
-    let idx = this.heap.length - 1;
-
-    while (
-      idx > 0 &&
-      this.heap[this.getParentIdx(idx)].val > this.heap[idx].val
-    ) {
-      const parentIdx = this.getParentIdx(idx);
-
-      let tmp = this.heap[idx];
-      this.heap[idx] = this.heap[parentIdx];
-      this.heap[parentIdx] = tmp;
-
-      idx = parentIdx;
-    }
+    this.bubbleUp(this.heap.length - 1);
   }
 
   public pop(): ListNode | null {
@@ -103,37 +135,7 @@ class MyMinHeap {
     if (min === last) return min;
 
     this.heap[0] = last;
-
-    let idx = 0;
-
-    while (true) {
-      let left = 2 * idx + 1;
-      let right = 2 * idx + 2;
-      let smallest = idx;
-
-      if (
-        left < this.heap.length &&
-        this.heap[left].val < this.heap[smallest].val
-      ) {
-        smallest = left;
-      }
-
-      if (
-        right < this.heap.length &&
-        this.heap[right].val < this.heap[smallest].val
-      ) {
-        smallest = right;
-      }
-
-      if (smallest === idx) break;
-
-      [this.heap[idx], this.heap[smallest]] = [
-        this.heap[smallest],
-        this.heap[idx],
-      ];
-
-      idx = smallest;
-    }
+    this.bubbleDown(0);
 
     return min;
   }
