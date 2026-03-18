@@ -10,36 +10,27 @@ class ListNode {
 function reverseKGroup(head: ListNode | null, k: number): ListNode | null {
   if (head === null) return null;
 
-  let len = 0,
-    tmp: ListNode | null = head;
-  while (tmp !== null) {
-    tmp = tmp.next ?? null;
-    len += 1;
+  let counter = 0,
+    node: ListNode | null = head;
+  while (node && counter < k) {
+    node = node.next ?? null;
+    counter += 1;
   }
 
-  if (len < k) return head;
+  if (counter < k) return head;
 
-  let a = head,
-    b = head.next,
-    depth = k;
-  while (depth > 1 && a && b) {
-    if (a === head) {
-      a.next = null;
-    }
-
-    const bNext = b?.next;
-
-    b.next = a;
-
-    a = b;
-    b = bNext;
-
-    depth -= 1;
+  let prev: ListNode | null = null,
+    curr = head;
+  for (let i = 0; i < k; i++) {
+    const next = curr!.next;
+    curr!.next = prev;
+    prev = curr;
+    curr = next!;
   }
 
-  head.next = reverseKGroup(b, k);
+  head.next = reverseKGroup(curr, k);
 
-  return a;
+  return prev;
 }
 
 reverseKGroup(
