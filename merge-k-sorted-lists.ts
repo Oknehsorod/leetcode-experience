@@ -118,7 +118,7 @@ class MyMinHeap {
       this.heap[idx],
     ];
 
-    this.bubbleDown(idx);
+    this.bubbleDown(smallest);
   }
 
   public insert(node: ListNode) {
