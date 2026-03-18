@@ -22,12 +22,12 @@ function searchMatrix(matrix: number[][], target: number): boolean {
 
   while (l <= r) {
     let m = l + Math.floor((r - l) / 2),
-      firstEl = matrix[m][0],
-      lastEl = matrix[m][matrix[m].length - 1];
+      first = matrix[m][0],
+      last = matrix[m][matrix[m].length - 1];
 
-    if (lastEl < target) {
+    if (last < target) {
       l = m + 1;
-    } else if (firstEl > target) {
+    } else if (first > target) {
       r = m - 1;
     } else {
       return search(matrix[m], target) > -1;
