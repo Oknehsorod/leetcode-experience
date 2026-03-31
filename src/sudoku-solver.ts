@@ -42,7 +42,6 @@ function solveSudoku(board: string[][]): void {
   };
 
   backtrack();
-  debugger;
 }
 
 solveSudoku([
