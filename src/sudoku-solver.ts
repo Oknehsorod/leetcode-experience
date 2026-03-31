@@ -1,81 +1,50 @@
-const showSudokuFromHash = (hash: Map<string, string[]>) => {
+const showSudoku = (board: string[][]) => {
   const result: string[] = [];
 
-  for (let i = 0; i < 9; i += 1) result.push(hash.get(`r${i}`)!.join(' '));
+  for (let i = 0; i < 9; i += 1) result.push(board[i].join(' '));
 
   console.log(`\n${'-'.repeat(40)}\n`);
   console.log(result.join('\n'));
   console.log(`\n${'-'.repeat(40)}\n`);
 };
 
+const isValid = (board: string[][], row: number, col: number, num: string) => {
+  for (let i = 0; i < 9; i++) {
+    if (board[row][i] === num || board[i][col] === num) return false;
+  }
+  let startRow = Math.floor(row / 3) * 3;
+  let startCol = Math.floor(col / 3) * 3;
+  for (let i = startRow; i < startRow + 3; i++) {
+    for (let j = startCol; j < startCol + 3; j++) {
+      if (board[i][j] === num) return false;
+    }
+  }
+  return true;
+};
+
 function solveSudoku(board: string[][]): void {
-  const emptyIdxs: [number, number][] = [];
+  const backtrack = (): boolean => {
+    for (let i = 0; i < 9; i += 1) {
+      for (let j = 0; j < 9; j += 1) {
+        if (board[i][j] !== '.') continue;
 
-  const initHash = new Map<string, string[]>();
-
-  board.forEach((row, idx) => {
-    if (idx % 3 === 0) {
-      for (let i = 0; i < 9; i += 3) {
-        initHash.set(`s${idx}-${i}`, [
-          ...board[idx].slice(i, i + 3),
-          ...board[idx + 1].slice(i, i + 3),
-          ...board[idx + 2].slice(i, i + 3),
-        ]);
+        for (let n = 1; n <= 9; n += 1) {
+          if (isValid(board, i, j, n.toString())) {
+            board[i][j] = n.toString();
+            if (backtrack()) return true;
+            board[i][j] = '.';
+          }
+        }
+        return false;
       }
     }
-    row.forEach((v, j) => {
-      initHash.set(`c${j}`, [...(initHash.get(`c${j}`) ?? []), v]);
-      if (v === '.') emptyIdxs.push([idx, j]);
-    });
-    initHash.set(`r${idx}`, row);
-  });
-
-  const backtrack = (e: [number, number][], hash: Map<string, string[]>) => {
-    if (e.length === 0) {
-      for (let i = 0; i < 9; i += 1) {
-        board[i] = hash.get(`r${i}`)!;
-      }
-      return;
-    }
-    const shiftedVal = e.shift()!;
-    const [x, y] = shiftedVal!;
-
-    const sKey = `s${x - (x % 3)}-${y - (y % 3)}`;
-    const rKey = `r${x}`;
-    const cKey = `c${y}`;
-    const s = hash.get(sKey)!;
-    const r = hash.get(rKey)!;
-    const c = hash.get(cKey)!;
-
-    const a = new Set([...s, ...r, ...c]);
-
-    for (let i = 1; i <= 9; i += 1) {
-      const iStr = i.toString();
-
-      if (a.has(iStr)) continue;
-
-      const newHash = new Map(hash);
-
-      const newS = [...s];
-      const newR = [...r];
-      const newC = [...c];
-
-      newS[(x % 3) * 3 + (y % 3)] = iStr;
-      newR[y] = iStr;
-      newC[x] = iStr;
-
-      newHash.set(sKey, newS);
-      newHash.set(rKey, newR);
-      newHash.set(cKey, newC);
-
-      backtrack([...e], newHash);
-    }
+    return true;
   };
 
-  backtrack([...emptyIdxs], initHash);
+  backtrack();
+  debugger;
 }
 
-/*
 solveSudoku([
   ['5', '3', '.', '.', '7', '.', '.', '.', '.'],
   ['6', '.', '.', '1', '9', '5', '.', '.', '.'],
@@ -87,8 +56,8 @@ solveSudoku([
   ['.', '.', '.', '4', '1', '9', '.', '.', '5'],
   ['.', '.', '.', '.', '8', '.', '.', '7', '9'],
 ]);
-*/
 
+/*
 solveSudoku([
   ['.', '.', '.', '.', '.', '.', '.', '.', '.'],
   ['.', '9', '.', '.', '1', '.', '.', '3', '.'],
@@ -100,3 +69,4 @@ solveSudoku([
   ['.', '8', '.', '.', '.', '.', '.', '1', '.'],
   ['.', '.', '.', '.', '.', '.', '.', '.', '.'],
 ]);
+*/
