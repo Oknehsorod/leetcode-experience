@@ -10,6 +10,7 @@ function combinationSum2(candidates: number[], target: number): number[][] {
     for (let i = start; i < candidates.length; i += 1) {
       const value = candidates[i];
 
+      if (value > target) break;
       if (i > start && candidates[i] === candidates[i - 1]) continue;
       if (remaining - value < 0) continue;
 
