@@ -11,9 +11,3 @@ function canJump(nums: number[]): boolean {
 }
 
 canJump([2, 3, 1, 5, 4]);
-
-/*
-
-[2, 3, 1, |1|, 4]
-
-*/
