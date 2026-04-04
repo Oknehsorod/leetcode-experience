@@ -5,37 +5,23 @@
 
 */
 
+const sum = (array: number[]) => array.reduce((acc, cur) => acc + cur, 0);
 function canCompleteCircuit(gas: number[], cost: number[]): number {
-  const stack: number[] = [],
-    n = gas.length;
-  let gasSum = 0,
-    costSum = 0;
+  if (sum(gas) < sum(cost)) return -1;
+
+  let total = 0,
+    result = 0;
 
   for (let i = 0; i < gas.length; i++) {
-    gasSum += gas[i];
-    costSum += cost[i];
-    if (gas[i] / cost[i] >= 1) stack.push(i);
+    total += gas[i] - cost[i];
+
+    if (total < 0) {
+      total = 0;
+      result = i + 1;
+    }
   }
 
-  if (gasSum < costSum) return -1;
-  if (stack.length === n) return 0;
-
-  while (stack.length > 0) {
-    const start = stack.pop()!;
-
-    let i = start,
-      tank = 0;
-
-    do {
-      tank += gas[i] - cost[i];
-      if (tank < 0) break;
-      i = (i + 1) % n;
-    } while (i !== start);
-
-    if (i === start) return start;
-  }
-
-  return -1;
+  return result;
 }
 
 console.log(canCompleteCircuit([1, 2, 3, 4, 5], [3, 4, 5, 1, 2]) === 3);
