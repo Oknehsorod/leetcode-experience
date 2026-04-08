@@ -4,26 +4,23 @@ import { TreeNode } from './utils/TreeNode.ts';
 function kthSmallest(root: TreeNode | null, k: number): number {
   if (root === null) return -1;
 
-  const stack: TreeNode[] = [];
-  let current: TreeNode | null = root,
+  let result = -1,
     count = 0;
-
-  while (current !== null || stack.length > 0) {
-    while (current !== null) {
-      stack.push(current);
-      current = current.left;
+  const dfs = (n: TreeNode | null) => {
+    if (n === null) {
+      count += 1;
+      return;
     }
 
-    current = stack.pop()!;
-    count += 1;
+    dfs(n.left);
+    if (count === k) result = n.val;
+    dfs(n.right);
+  };
 
-    if (count === k) return current?.val;
+  dfs(root);
 
-    current = current.right;
-  }
-
-  return -1;
+  return result;
 }
 
-console.log(kthSmallest(buildTree([3, 1, 4, null, 2]), 1));
+//console.log(kthSmallest(buildTree([3, 1, 4, null, 2]), 1));
 console.log(kthSmallest(buildTree([5, 3, 6, 2, 4, null, null, 1]), 3));
