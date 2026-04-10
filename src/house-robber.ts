@@ -7,7 +7,7 @@ function rob(nums: number[]): number {
     dp[i] = Math.max(nums[i] + dp[i + 2], dp[i + 1]);
   }
 
-  return Math.max(dp[0], dp[1]);
+  return dp[0];
 }
 
 rob([1, 2, 3, 1]);
