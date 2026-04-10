@@ -1,7 +1,7 @@
 function minCostClimbingStairs(cost: number[]): number {
   if (cost.length <= 2) return Math.min(...cost);
 
-  const dp = new Array(cost.length);
+  const dp = new Array(cost.length + 1);
   dp[cost.length] = 0;
   dp[cost.length - 1] = cost.at(-1);
 
