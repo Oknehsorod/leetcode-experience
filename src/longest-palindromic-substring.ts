@@ -1,4 +1,4 @@
-function longestPalindrome(s: string): string {
+function longestPalindromeDP(s: string): string {
   const n = s.length;
   if (n <= 1) return s;
 
@@ -21,6 +21,41 @@ function longestPalindrome(s: string): string {
   return s.slice(startIndex, startIndex + delta);
 }
 
+function longestPalindrome(s: string): string {
+  let startIndex = 0,
+    delta = 0;
+
+  for (let i = 0; i < s.length; i++) {
+    let l = i,
+      r = i;
+
+    while (l >= 0 && r < s.length && s[l] === s[r]) {
+      if (r - l + 1 > delta) {
+        startIndex = l;
+        delta = r - l + 1;
+      }
+
+      l--;
+      r++;
+    }
+
+    l = i;
+    r = i + 1;
+    while (l >= 0 && r < s.length && s[l] === s[r]) {
+      if (r - l + 1 > delta) {
+        startIndex = l;
+        delta = r - l + 1;
+      }
+
+      l--;
+      r++;
+    }
+  }
+
+  return s.substring(startIndex, startIndex + delta);
+}
+
 //console.log(longestPalindrome('babad'));
 //console.log(longestPalindrome('cbbd'));
-console.log(longestPalindrome('abbcccba'));
+//console.log(longestPalindrome('abbcccba'));
+console.log(longestPalindrome('bb'));
