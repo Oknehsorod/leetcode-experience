@@ -21,7 +21,7 @@ function longestPalindromeDP(s: string): string {
   return s.slice(startIndex, startIndex + delta);
 }
 
-function longestPalindrome(s: string): string {
+function longestPalindromeSlidingWindow(s: string): string {
   let startIndex = 0,
     delta = 0;
 
@@ -55,7 +55,45 @@ function longestPalindrome(s: string): string {
   return s.substring(startIndex, startIndex + delta);
 }
 
-//console.log(longestPalindrome('babad'));
-//console.log(longestPalindrome('cbbd'));
-//console.log(longestPalindrome('abbcccba'));
+function longestPalindrome(s: string): string {
+  const transformedString = `#${s.split('').join('#')}#`;
+  const transformedStringLength = transformedString.length;
+  const radiuses = new Array(transformedStringLength).fill(0);
+
+  let maxLength = 0,
+    centerIndex = 0;
+
+  let left = 0,
+    right = 0;
+
+  for (let i = 0; i < transformedStringLength; i++) {
+    radiuses[i] =
+      i < right ? Math.min(right - i, radiuses[left + (right - i)]) : 0;
+
+    while (
+      i + radiuses[i] + 1 < transformedStringLength &&
+      i - radiuses[i] - 1 >= 0 &&
+      transformedString[i + radiuses[i] + 1] ===
+        transformedString[i - radiuses[i] - 1]
+    )
+      radiuses[i] += 1;
+
+    if (i + radiuses[i] > right) {
+      left = i - radiuses[i];
+      right = i + radiuses[i];
+    }
+
+    if (radiuses[i] > maxLength) {
+      maxLength = radiuses[i];
+      centerIndex = i;
+    }
+  }
+
+  const start = Math.floor((centerIndex - maxLength) / 2);
+  return s.slice(start, start + maxLength);
+}
+
+console.log(longestPalindrome('babad'));
+console.log(longestPalindrome('cbbd'));
+console.log(longestPalindrome('abbcccba'));
 console.log(longestPalindrome('bb'));
