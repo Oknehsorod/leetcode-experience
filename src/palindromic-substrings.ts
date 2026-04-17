@@ -18,4 +18,23 @@ function countSubstrings(s: string): number {
   return counter;
 }
 
-countSubstrings('abc');
+function countSubstringsSlidingWindow(s: string): number {
+  let result = 0;
+
+  const expand = (from: number, to: number) => {
+    while (from >= 0 && to < s.length && s[from] === s[to]) {
+      result += 1;
+      from--;
+      to++;
+    }
+  };
+
+  for (let i = 0; i < s.length; i++) {
+    expand(i, i);
+    expand(i, i + 1);
+  }
+
+  return result;
+}
+
+countSubstringsSlidingWindow('aaa');
