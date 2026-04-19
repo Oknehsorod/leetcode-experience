@@ -37,4 +37,37 @@ function countSubstringsSlidingWindow(s: string): number {
   return result;
 }
 
-countSubstringsSlidingWindow('aaa');
+function countSubstringsManacher(s: string): number {
+  let result = 0;
+
+  const t = `#${s.split('').join('#')}#`;
+  const n = t.length;
+  const radiuses = new Array(n).fill(0);
+
+  let l = 0,
+    r = 0;
+
+  for (let i = 0; i < n; i++) {
+    radiuses[i] = i < r ? Math.min(r - i, radiuses[l + (r - i)]) : 0;
+
+    while (
+      i - radiuses[i] - 1 >= 0 &&
+      i + radiuses[i] + 1 < n &&
+      t[i - radiuses[i] - 1] === t[i + radiuses[i] + 1]
+    )
+      radiuses[i] += 1;
+
+    if (i + radiuses[i] > r) {
+      r = i + radiuses[i];
+      l = i - radiuses[i];
+    }
+  }
+
+  for (let i = 0; i < n; i += 1) {
+    result += Math.floor((radiuses[i] + 1) / 2);
+  }
+
+  return result;
+}
+
+countSubstringsManacher('aaa');
