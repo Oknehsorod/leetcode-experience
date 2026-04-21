@@ -4,7 +4,7 @@ i = 0;
 2: "12" -> "12"  = dp[i + 2];
 */
 
-function numDecodings(s: string): number {
+function numDecodingsBUDP(s: string): number {
   if (s.length === 0 || s[0] === '0') return 0;
 
   const dp = new Array(s.length + 1).fill(0);
@@ -21,6 +21,27 @@ function numDecodings(s: string): number {
   }
 
   return dp[0];
+}
+
+function numDecodings(s: string): number {
+  if (s.length === 0 || s[0] === '0') return 0;
+
+  let dp = 0,
+    dp1 = 1,
+    dp2 = 0;
+
+  for (let i = s.length - 1; i >= 0; i--) {
+    if (s[i] === '0') {
+      dp = 0;
+    } else {
+      dp = Number.parseInt(s[i] + s[i + 1]) <= 26 ? dp1 + dp2 : dp1;
+    }
+    dp2 = dp1;
+    dp1 = dp;
+    dp = 0;
+  }
+
+  return dp1;
 }
 
 numDecodings('12');
