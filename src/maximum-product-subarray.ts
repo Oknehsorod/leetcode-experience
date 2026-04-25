@@ -1,4 +1,4 @@
-function maxProduct(nums: number[]): number {
+function maxProductBF(nums: number[]): number {
   let result: number = -Infinity;
 
   for (let i = 0; i < nums.length; i++) {
@@ -10,7 +10,20 @@ function maxProduct(nums: number[]): number {
     }
   }
 
-  debugger;
+  return result;
+}
+
+function maxProduct(nums: number[]): number {
+  let result = nums[0],
+    currentMax = 1,
+    currentMin = 1;
+
+  for (const num of nums) {
+    const tmp = num * currentMax;
+    currentMax = Math.max(num, currentMin * num, tmp);
+    currentMin = Math.min(num, currentMin * num, tmp);
+    result = Math.max(result, currentMax);
+  }
 
   return result;
 }
