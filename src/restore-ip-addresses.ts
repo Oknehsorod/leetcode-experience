@@ -1,21 +1,35 @@
 function restoreIpAddresses(s: string): string[] {
-  const result: Set<string> = new Set();
+  const result: string[] = [];
 
-  const backtrack = (current: number[], idx: number) => {
-    if (current.length === 4 && idx >= s.length) {
-      result.add(current.join('.'));
+  const backtrack = (path: string[], idx: number) => {
+    const remainingParts = 4 - path.length;
+    const remainingLength = s.length - idx;
+    // debugger;
+
+    if (
+      remainingLength < remainingParts ||
+      remainingLength > remainingParts * 3
+    )
+      return false;
+
+    if (path.length === 4 && idx >= s.length) {
+      result.push(path.join('.'));
       return true;
     }
-    if (idx >= s.length || current.length > 4) return false;
+    if (idx >= s.length || path.length >= 4) return false;
 
-    if (s[idx] === '0') return backtrack([...current, 0], idx + 1);
+    if (s[idx] === '0') return backtrack([...path, '0'], idx + 1);
 
-    for (let i = 1; i <= 3; i++) {
-      const element = Number.parseInt(s.slice(idx, idx + i));
+    for (let i = 1; i <= 3 && idx + i <= s.length; i++) {
+      const slice = s.slice(idx, idx + i);
 
-      if (element > 255) break;
+      if (Number.parseInt(slice) > 255) break;
 
-      backtrack([...current, element], idx + i);
+      path.push(slice);
+
+      backtrack(path, idx + i);
+
+      path.pop();
     }
 
     return false;
@@ -23,7 +37,7 @@ function restoreIpAddresses(s: string): string[] {
 
   backtrack([], 0);
 
-  return [...result];
+  return result;
 }
 
 console.log(restoreIpAddresses('25525511135'));
