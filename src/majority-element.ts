@@ -13,4 +13,10 @@ function majorityElement(nums: number[]): number {
   return candidate;
 }
 
+
+/*
+Time Complexity: O(N)
+Space Complexity: O(1)
+*/
+
 console.log(majorityElement([2, 2, 1, 1, 1, 2, 2]));
