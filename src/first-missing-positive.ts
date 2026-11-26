@@ -22,6 +22,11 @@ function firstMissingPositive(nums: number[]): number {
   return n + 1;
 }
 
+/*
+Time Complexity: O(2n) = O(n)
+Space Complexity: O(1)
+*/
+
 // console.log(firstMissingPositive([1, 2, 0]));
 // console.log(firstMissingPositive([3, 4, -1, 1]));
 // console.log(firstMissingPositive([7, 8, 9, 11, 12]));
