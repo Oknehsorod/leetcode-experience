@@ -33,6 +33,11 @@ class MyQueue {
   }
 }
 
+/*
+Time Complexity: pop/peek - O(n), empty/push - O(1)
+Space Complexity: O(n)
+*/
+
 runClassMethods(
   MyQueue,
   [
